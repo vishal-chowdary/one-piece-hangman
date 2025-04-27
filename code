@@ -1,0 +1,125 @@
+print("One Piece Hangman")
+import random
+
+def choose_word():
+    words = ["luffy", "zoro", "nami", "usopp", "sanji", "chopper", "robin", "franky", "brook", "jinbe",
+             "roger", "rayleigh", "gaban", "whitebeard", "marco", "ace", "kaido", "king", "queen",
+             "linlin", "katakuri", "cracker", "shanks", "beckmann", "luckyroux", "vanaugur",
+             "blackbeard", "mihawk", "hancock", "crocodile", "moria", "doflamingo", "kuma",
+             "trafalgar", "eustass", "bepo", "killer", "bonney", "bege", "hawkins", "urouge",
+             "dadan", "sabo", "koby"]
+    return random.choice(words)
+
+def display_board(word, guessed_letters):
+    display = ""
+    for letter in word:
+        if letter in guessed_letters:
+            display += letter + " "
+        else:
+            display += "_ "
+    print(display)
+
+def draw_hangman(attempts_left):
+    stages = [
+        """
+           -----
+           |   |
+           O   |
+          /|\  |
+          / \  |
+               |
+        ---------
+        """,
+        """
+           -----
+           |   |
+           O   |
+          /|\  |
+          /    |
+               |
+        ---------
+        """,
+        """
+           -----
+           |   |
+           O   |
+          /|\  |
+               |
+               |
+        ---------
+        """,
+        """
+           -----
+           |   |
+           O   |
+          /|   |
+               |
+               |
+        ---------
+        """,
+        """
+           -----
+           |   |
+           O   |
+           |   |
+               |
+               |
+        ---------
+        """,
+        """
+           -----
+           |   |
+           O   |
+               |
+               |
+               |
+        ---------
+        """,
+        """
+           -----
+           |   |
+               |
+               |
+               |
+               |
+        ---------
+        """
+    ]
+    print(stages[6 - attempts_left])
+
+def hangman():
+    word = choose_word()
+    guessed_letters = []
+    attempts = 6
+
+    print("Welcome to Hangman!")
+    print(f"You have {attempts} incorrect guesses allowed.\n")
+
+    while attempts > 0:
+        draw_hangman(attempts)
+        display_board(word, guessed_letters)
+        guess = input("Guess a letter: ").lower()
+
+        if len(guess) != 1 or not guess.isalpha():
+            print("Please enter a single valid letter.")
+            continue
+
+        if guess in guessed_letters:
+            print("You've already guessed that letter!")
+            continue
+
+        guessed_letters.append(guess)
+
+        if guess not in word:
+            attempts -= 1
+            print(f"Wrong guess! You have {attempts} attempts left.")
+
+        if all(letter in guessed_letters for letter in word):
+            draw_hangman(attempts)
+            print(f"Congratulations! You guessed the word: {word}")
+            break
+    else:
+        draw_hangman(attempts)
+        print(f"Game Over! The word was: {word}")
+
+hangman()
